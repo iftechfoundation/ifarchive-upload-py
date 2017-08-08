@@ -67,7 +67,7 @@ dirUpload = "/var/ifarchive/incoming"
 logfile = "/var/ifarchive/logs/web-upload.log"
 
 # Database of IFDB IDs.
-ifdbIdFile = "/var/ifarchive/lib/ifids.db"
+ifdbIdFile = "/var/ifarchive/lib/ifids"
 
 # Maximum size of upload directory (in kilobytes) before no more files
 # are accepted.
@@ -267,9 +267,9 @@ problem persists, please contact the archive maintainers.</p>""")
                     else:
                         # We gotta play with the umask to open shelve
                         oldmask = os.umask(0)
-                        ids = shelve.open(ifdbIdFile)
+                        ids = shelve.open(ifdbIdFile, protocol=2)
                         # Get the md5 hash of the file data.
-                        hashval = hashlib.md5(data[key].value).digest().decode('latin-1')
+                        hashval = hashlib.md5(data[key].value).hexdigest()
                         ids[hashval] = {"id": ifdbID, "time": time.time()}
                         ids.close()
                         os.umask(oldmask)
