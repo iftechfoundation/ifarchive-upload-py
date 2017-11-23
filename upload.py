@@ -5,8 +5,14 @@ A simple CGI script to accept uploaded files.
 
 Written by Andrew Plotkin and many contributors.
 Originally adapted from a script by Tim Middleton.
+
+This script must run in a UTF-8 locale, or Unicode input will cause horrible
+errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
+takes care of this.
 """
 
+# Andrew Plotkin (23 November 2017):
+#   - Update to use subprocess instead of os.popen.
 # Andrew Plotkin (25 July 2017):
 #   - Rewrote the whole script in Python 3.
 #   - Put all the HTML templates in /var/ifarchive/lib/uploader.
