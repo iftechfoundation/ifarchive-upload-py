@@ -45,6 +45,8 @@ Originally adapted from a script by Tim Middleton.
 
 import sys
 import os
+import io
+import subprocess
 import cgi
 import glob
 import string
@@ -130,23 +132,25 @@ def mailme(msg="", name="", nemail="", mailsubj="Upload Report"):
     
     if email:
         try:
-            o = os.popen("%s -t" % sendmail,"w")
-            o.write("To: %s\n" % email)
-            o.write("From: %s\n" % email)
-            o.write("Subject: %s\n" % mailsubj)
+            fl = io.StringIO()
+            fl.write("To: %s\n" % email)
+            fl.write("From: %s\n" % email)
+            fl.write("Subject: %s\n" % mailsubj)
             if (nemail != ""):
                 tempstr = "<" + nemail + ">"
                 if (name != ""):
                     tempstr = name + " " + tempstr
-                o.write("Reply-To: %s\n" % tempstr)
-            o.write("\n")
-            o.write("%s\n" % msg)
-            o.write("---------------------------------------\n")
+                fl.write("Reply-To: %s\n" % tempstr)
+            fl.write("\n")
+            fl.write("%s\n" % msg)
+            fl.write("---------------------------------------\n")
             for x in headerlist:
                 if x in os.environ:
-                    o.write("%s: %s\n" % (x, os.environ[x]))
-            o.write("---------------------------------------\n")
-            o.close()                                        
+                    fl.write("%s: %s\n" % (x, os.environ[x]))
+            fl.write("---------------------------------------\n")
+            bytemsg = fl.getvalue().encode('utf-8')
+            fl.close()
+            subprocess.run([sendmail, '-t'], input=bytemsg, check=True)
         except IOError:
             pass                                        
 
