@@ -11,6 +11,8 @@ errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
 takes care of this.
 """
 
+# Andrew Plotkin (27 May 2018):
+#   - Added an "accept the terms of service" checkbox.
 # Andrew Plotkin (23 November 2017):
 #   - Update to use subprocess instead of os.popen.
 # Andrew Plotkin (25 July 2017):
@@ -193,6 +195,12 @@ def form(data, posturl):
         return
 
     # We have uploads!
+
+    tosval = data.getfirst('tos', None)
+    if not tosval:
+        msg = """You must agree to the Terms of Use in order to upload files to the Archive."""
+        errpage('<p>'+msg+'</p>')
+        return
 
     rightsval = data.getfirst('rights', None)
     if not rightsval:
