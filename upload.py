@@ -79,9 +79,13 @@ logfile = "/var/ifarchive/logs/web-upload.log"
 # Database of IFDB IDs.
 ifdbIdFile = "/var/ifarchive/lib/ifids"
 
-# Maximum size of upload directory (in kilobytes) before no more files
+# Maximum size of upload directory (in bytes) before no more files
 # are accepted.
-maxkb = 50000
+maxdirsize = 50000000
+
+# Current size of upload directory (in bytes). Will compute before
+# running the form.
+totaldirsize = None
 
 # Where to email upload reports.
 email = "webuploader@ifarchive.org"
@@ -185,7 +189,7 @@ def form(data, posturl):
 
     if "file.1" not in data:
         # No files, show the primary form.
-        if totalsize/1024 < maxkb:
+        if totaldirsize < maxdirsize:
             button = 'type="submit" value="Upload File"'
         else:
             button = 'type="button" value="Upload Disabled (upload directory is full)"'
@@ -208,7 +212,7 @@ def form(data, posturl):
         errpage('<p>'+msg+'</p>')
         return
 
-    if totalsize/1024 >= maxkb:
+    if totaldirsize >= maxdirsize:
         # We don't publicize the maximum size.
         msg = """There are already too many files in the upload area, preventing your files from being uploaded. We apologize for the inconvenience."""
         errpage('<p>'+msg+'</p>')
@@ -386,10 +390,10 @@ else:
     remoteaddr = "?"
 
 # Figure out the total size (bytes) of files in the incoming directory.
-totalsize = 0
+totaldirsize = 0
 for ent in os.scandir(dirUpload):
     if ent.is_file():
-        totalsize += ent.stat().st_size
+        totaldirsize += ent.stat().st_size
 
 data = cgi.FieldStorage()
 form(data, posturl)
