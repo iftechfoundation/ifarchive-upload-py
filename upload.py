@@ -81,7 +81,7 @@ ifdbIdFile = "/var/ifarchive/lib/ifids"
 
 # Maximum size of upload directory (in bytes) before no more files
 # are accepted.
-maxdirsize = 50000000
+maxdirsize = 1024*1024*1024  # one gigabyte
 
 # Current size of upload directory (in bytes). Will compute before
 # running the form.
