@@ -157,7 +157,7 @@ def clean_filename(fn):
     if not fn:
         fn = 'file'
 
-    return fn
+    return (fn, ofn)
 
 def mailme(msg="", name="", nemail="", mailsubj="Upload Report"):
     """Quick and dirty, pipe a message to sendmail, appending
@@ -262,7 +262,7 @@ def form(data, posturl):
                 f = f + 1
                 continue
             
-            fn = clean_filename(fn)
+            (fn, ofn) = clean_filename(fn)
 
             # If the file already exists, add a timestamp to the new filename
             if os.path.isfile(os.path.join(dirUpload, fn)):
