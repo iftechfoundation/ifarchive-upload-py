@@ -137,6 +137,28 @@ def fix_line_endings(val):
     """
     return val.replace('\r', '')
 
+def clean_filename(fn):
+    """Clean a filename from the HTML form. Remove directory names;
+    then remove unsafe characters.
+    """
+    # Strip out path indicators from the filenames
+    if fn.rfind("\\") >= 0:
+        fn = fn[fn.rfind("\\")+1:]
+    if fn.rfind("/") >= 0:
+        fn = fn[fn.rfind("/")+1:]
+    if fn.rfind(":") >= 0:
+        fn = fn[fn.rfind(":")+1:]
+    # Save the original filename (with path info stripped)
+    ofn = fn
+    # Now be paranoid and dump the filename if there's anything
+    # other than alphanumeric characters and the set [+-=_. ]
+    res = re.search('([a-zA-Z0-9 +=_.-]*)$', fn)
+    fn = res.group()
+    if not fn:
+        fn = 'file'
+
+    return fn
+
 def mailme(msg="", name="", nemail="", mailsubj="Upload Report"):
     """Quick and dirty, pipe a message to sendmail, appending
     various environmental variables to the message. Also log the
@@ -239,21 +261,8 @@ def form(data, posturl):
             if not fn:
                 f = f + 1
                 continue
-            # Strip out path indicators from the filenames
-            if fn.rfind("\\") >= 0:
-                fn = fn[fn.rfind("\\")+1:]
-            if fn.rfind("/") >= 0:
-                fn = fn[fn.rfind("/")+1:]
-            if fn.rfind(":") >= 0:
-                fn = fn[fn.rfind(":")+1:]
-            # Save the original filename (with path info stripped)
-            ofn = fn
-            # Now be paranoid and dump the filename if there's anything
-            # other than alphanumeric characters and the set [+-=_. ]
-            res = re.search('([a-zA-Z0-9 +=_.-]*)$', fn)
-            fn = res.group()
-            if not fn:
-                fn = 'file'
+            
+            fn = clean_filename(fn)
 
             # If the file already exists, add a timestamp to the new filename
             if os.path.isfile(os.path.join(dirUpload, fn)):
