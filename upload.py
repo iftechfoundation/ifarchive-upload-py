@@ -11,7 +11,8 @@ errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
 takes care of this.
 """
 
-# Andrew Plotkin (29 Sep 2023):
+# Andrew Plotkin (30 Sep 2023):
+#   - Improved the filename-cleaning code.
 #   - Bumped upload-dir limit to one gigabyte.
 # Andrew Plotkin (27 May 2018):
 #   - Added an "accept the terms of service" checkbox.
