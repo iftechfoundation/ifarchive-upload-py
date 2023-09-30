@@ -137,27 +137,26 @@ def fix_line_endings(val):
     """
     return val.replace('\r', '')
 
-def clean_filename(fn):
-    """Clean a filename from the HTML form. Remove directory names;
-    then remove unsafe characters.
+def strip_dirs(fn):
+    """Remove directory names from a path.
     """
-    # Strip out path indicators from the filenames
-    if fn.rfind("\\") >= 0:
-        fn = fn[fn.rfind("\\")+1:]
-    if fn.rfind("/") >= 0:
-        fn = fn[fn.rfind("/")+1:]
-    if fn.rfind(":") >= 0:
-        fn = fn[fn.rfind(":")+1:]
-    # Save the original filename (with path info stripped)
-    ofn = fn
-    # Now be paranoid and dump the filename if there's anything
-    # other than alphanumeric characters and the set [+-=_. ]
-    res = re.search('([a-zA-Z0-9 +=_.-]*)$', fn)
-    fn = res.group()
+    # Strip out the directory part of any filename (up to the last slash).
+    # We consider both Windows and regular slashes here, although
+    # only regular slashes should turn up.
+    # (Old code also considered the colon, which was a path separator in
+    # classic MacOS. I've dropped that.)
+    _, _, fn = fn.rpartition('/');
+    _, _, fn = fn.rpartition('\\');
     if not fn:
         fn = 'file'
+    return fn
 
-    return (fn, ofn)
+def clean_filename(fn):
+    """Clean a filename from the HTML form. We replace characters considered
+    unsafe with underscores. Safe is alphanumerics plus [+-=_. ].
+    """
+    fn = re.sub('[^a-zA-Z0-9 +=_.-]+', lambda ch:'_', fn)
+    return fn
 
 def mailme(msg="", name="", nemail="", mailsubj="Upload Report"):
     """Quick and dirty, pipe a message to sendmail, appending
@@ -261,8 +260,11 @@ def form(data, posturl):
             if not fn:
                 f = f + 1
                 continue
-            
-            (fn, ofn) = clean_filename(fn)
+
+            # Clean the filename. Strip off the dir part of the path, if
+            # any (that's ofn); then clean out unsafe characters (that's fn).
+            ofn = strip_dirs(fn)
+            fn = clean_filename(fn)
 
             # If the file already exists, add a timestamp to the new filename
             if os.path.isfile(os.path.join(dirUpload, fn)):
