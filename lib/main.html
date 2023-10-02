@@ -52,16 +52,16 @@ If you have any problems, please contact us: <code><a href="mailto:submit@ifarch
   <tr><td>About this file<br>(including version, license, etc.):</td><td>&nbsp;</td>
     <td><textarea name="filedesc" rows="6" cols="40"></textarea></td></tr>
   <tr><td>Right to use:</td><td>&nbsp;</td>
-    <td><input type="radio" name="rights" value="author">
-        I am the author of this file and I give permission for the IF Archive to host and distribute it.</td></tr>
+    <td><input id="b_rights_author" type="radio" name="rights" value="author">
+        <label for="b_rights_author">I am the author of this file and I give permission for the IF Archive to host and distribute it.</label></td></tr>
   <tr><td></td><td>&nbsp;</td>
-    <td><input type="radio" name="rights" value="tried">
-        I am not the author, but to the best of my knowledge the author is okay with this.</td></tr>
+    <td><input id="b_rights_tried" type="radio" name="rights" value="tried">
+        <label for="b_rights_tried">I am not the author, but to the best of my knowledge the author is okay with this.</label></td></tr>
   <tr><td>Suggested directory:</td><td>if&#x2011;archive/</td>
     <td><input type="text" name="directory" size="40" maxlength="100"></td></tr>
   <tr><td>Agreement:</td><td>&nbsp;</td>
-    <td><input type="checkbox" name="tos">
-        I agree to the <a href="../misc/license.html">Terms of Use</a>.</td></tr>
+    <td><input id="b_tos" type="checkbox" name="tos">
+        <label for="b_tos">I agree to the <a href="../misc/license.html">Terms of Use</a>.</label></td></tr>
 </table>
 
 <p><input name="submit" {button}></p>
