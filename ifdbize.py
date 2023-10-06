@@ -17,7 +17,7 @@
 #   filemd5: { 'time':timestamp, 'id':ifdbid }
 # For historical reasons we are still on shelve/pickle protocol 2.
 
-import os, os.path, shelve, hashlib, urllib.request, urllib.error, urllib.parse
+import os, os.path, shelve, hashlib, urllib.request
 
 def submitID(fns, askForID = False):
     ifdbIdFile = "/var/ifarchive/lib/ifids"
