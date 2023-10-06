@@ -15,19 +15,8 @@
 # The data shared between upload.py and this script is stored in a
 # Python "shelve" file (see ifdbIdFile). The format is a dict mapping
 #   filemd5: { 'time':timestamp, 'id':ifdbid }
-#
-# (This is currently a Python2 script.)
 
 import os, os.path, shelve, hashlib, urllib.request, urllib.error, urllib.parse
-
-def md5_file(f, block_size=2**20):
-    m = hashlib.md5()
-    while True:
-        data = f.read(block_size)
-        if not data:
-            break
-        m.update(data)
-    return m.hexdigest()
 
 def submitID(fns, askForID = False):
     ifdbIdFile = "/var/ifarchive/lib/ifids"
@@ -45,7 +34,7 @@ def submitID(fns, askForID = False):
         
         # See if an IFDB ID exists for the file (based on its md5 hash)
         o = open(fn, "r")
-        hashval = md5_file(o)
+        hashval = hashlib.md5(o.read()).hexdigest()
         o.close()
 
         # We gotta play with the umask to open shelve
