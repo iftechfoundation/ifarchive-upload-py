@@ -66,9 +66,14 @@ def submitID(fns, askForID = False):
 
         # Submit the directory to IFDB
         urlToFetch = ifdbUrl.format(ifdbid=ifdbID, path=ifdbPath, key=ifdbKey)
-        ifdbPage = urllib.request.urlopen(urlToFetch)
-        resultStr = ifdbPage.readline()
-        ifdbPage.close()
+        try:
+            ifdbPage = urllib.request.urlopen(urlToFetch)
+            resultStr = ifdbPage.readline()
+            ifdbPage.close()
+            resultStr = resultStr.decode()
+        except Exception as ex:
+            resultStr = str(ex)
+            
         # The ifdb update page returns plain text from the following list:
         #   OK
         #   Error: invalid API key
