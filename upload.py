@@ -11,9 +11,11 @@ errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
 takes care of this.
 """
 
+# Andrew Plotkin (6 Oct 2023):
+#   - Read a config file for configurable (and nonpublic) info.
 # Andrew Plotkin (30 Sep 2023):
 #   - Improved the filename-cleaning code.
-#   - Bumped upload-dir limit to one gigabyte.
+#   - Bumped upload-dir limit.
 # Andrew Plotkin (27 May 2018):
 #   - Added an "accept the terms of service" checkbox.
 # Andrew Plotkin (23 November 2017):
@@ -59,7 +61,7 @@ import os
 import io
 import subprocess
 import cgi
-import glob
+import configparser
 import string
 import logging
 import time
@@ -68,7 +70,11 @@ import re
 import shelve
 import hashlib
 
-# First, some constants.
+# First, some constants. Some of these are taken from a config file.
+
+configpath = '/var/ifarchive/lib/ifarch.config'
+config = configparser.ConfigParser()
+config.read(configpath)
 
 # Directory in which to find template files.
 dirLibFiles = "/var/ifarchive/lib/uploader"
@@ -80,11 +86,11 @@ dirUpload = "/var/ifarchive/incoming"
 logfile = "/var/ifarchive/logs/web-upload.log"
 
 # Database of IFDB IDs.
-ifdbIdFile = "/var/ifarchive/lib/ifids"
+ifdbIdFile = config['DEFAULT']['IFDBIdMapFile']
 
 # Maximum size of upload directory (in bytes) before no more files
 # are accepted.
-maxdirsize = 1024*1024*1024  # one gigabyte
+maxdirsize = config['DEFAULT'].getint('MaxIncomingDirSize')
 
 # Current size of upload directory (in bytes). Will compute before
 # running the form.
