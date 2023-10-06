@@ -34,7 +34,7 @@ def submitID(fns, askForID = False):
         (pathfn, basefn) = os.path.split(absfn)
         
         # See if an IFDB ID exists for the file (based on its md5 hash)
-        o = open(fn, "r")
+        o = open(fn, "rb")
         hashval = hashlib.md5(o.read()).hexdigest()
         o.close()
 
