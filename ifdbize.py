@@ -15,6 +15,7 @@
 # The data shared between upload.py and this script is stored in a
 # Python "shelve" file (see ifdbIdFile). The format is a dict mapping
 #   filemd5: { 'time':timestamp, 'id':ifdbid }
+# For historical reasons we are still on shelve/pickle protocol 2.
 
 import os, os.path, shelve, hashlib, urllib.request, urllib.error, urllib.parse
 
@@ -40,7 +41,7 @@ def submitID(fns, askForID = False):
         # We gotta play with the umask to open shelve
         ifdbID = None
         oldmask = os.umask(0)
-        ids = shelve.open(ifdbIdFile)
+        ids = shelve.open(ifdbIdFile, protocol=2)
         if hashval in ids:
             ifdbID = ids[hashval]['id']
         ids.close()
