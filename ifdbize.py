@@ -23,7 +23,7 @@ def submitID(fns, askForID = False):
     ifdbIdFile = "/var/ifarchive/lib/ifids"
     # ifdbKey is a real access key in production
     ifdbKey = 'XXX'
-    ifdbUrl = "https://ifdb.org/ifarchive-commit?ifdbid=%(ifdbid)s&path=%(path)s&key=%(key)s"
+    ifdbUrl = "https://ifdb.org/ifarchive-commit?ifdbid={ifdbid}&path={path}&key={key}"
     dirPrefix = '/var/ifarchive/htdocs' # Prefix to remove from a file's abspath
 
     for fn in fns:
@@ -65,9 +65,7 @@ def submitID(fns, askForID = False):
             ifdbPath = ifdbPath[len(dirPrefix):]
 
         # Submit the directory to IFDB
-        # (Man I wish we had access to str.format())
-        urlToFetch = ifdbUrl % {'ifdbid' : ifdbID, 'path' : ifdbPath,
-                                'key': ifdbKey}
+        urlToFetch = ifdbUrl.format(ifdbid=ifdbID, path=ifdbPath, key=ifdbKey)
         ifdbPage = urllib.request.urlopen(urlToFetch)
         resultStr = ifdbPage.readline()
         ifdbPage.close()
