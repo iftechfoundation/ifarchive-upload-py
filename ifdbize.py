@@ -17,12 +17,18 @@
 #   filemd5: { 'time':timestamp, 'id':ifdbid }
 # For historical reasons we are still on shelve/pickle protocol 2.
 
-import os, os.path, shelve, hashlib, urllib.request
+import os, os.path, shelve, hashlib
+import urllib.request
+import configparser
+
+configpath = '/var/ifarchive/lib/ifarch.config'
+config = configparser.ConfigParser()
+config.read(configpath)
+
+ifdbIdFile = config['DEFAULT']['IFDBIdMapFile']
+ifdbKey = config['DEFAULT']['IFDBCommitKey']
 
 def submitID(fns, askForID = False):
-    ifdbIdFile = "/var/ifarchive/lib/ifids"
-    # ifdbKey is a real access key in production
-    ifdbKey = 'XXX'
     ifdbUrl = "https://ifdb.org/ifarchive-commit?ifdbid={ifdbid}&path={path}&key={key}"
     dirPrefix = '/var/ifarchive/htdocs' # Prefix to remove from a file's abspath
 
