@@ -1,4 +1,4 @@
-#!/var/ifarchive/bin/python
+#!/usr/bin/env python3
 
 # This is part of the IFDB-Archive integration. Here's how it works:
 #
