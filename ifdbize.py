@@ -23,7 +23,7 @@ def submitID(fns, askForID = False):
     ifdbIdFile = "/var/ifarchive/lib/ifids"
     # ifdbKey is a real access key in production
     ifdbKey = 'XXX'
-    ifdbUrl = "http://ifdb.tads.org/ifarchive-commit?ifdbid=%(ifdbid)s&path=%(path)s&key=%(key)s"
+    ifdbUrl = "https://ifdb.org/ifarchive-commit?ifdbid=%(ifdbid)s&path=%(path)s&key=%(key)s"
     dirPrefix = '/var/ifarchive/htdocs' # Prefix to remove from a file's abspath
 
     for fn in fns:
