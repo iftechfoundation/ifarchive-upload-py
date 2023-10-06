@@ -18,7 +18,7 @@
 #
 # (This is currently a Python2 script.)
 
-import os, os.path, shelve, hashlib, urllib2
+import os, os.path, shelve, hashlib, urllib.request, urllib.error, urllib.parse
 
 def md5_file(f, block_size=2**20):
     m = hashlib.md5()
@@ -61,12 +61,12 @@ def submitID(fns, askForID = False):
         # If not, query for the IFDB ID interactively (sometimes)
         if ifdbID is None:
             if askForID:
-                ifdbID = raw_input("IFDB ID for %s: "% basefn)
+                ifdbID = input("IFDB ID for %s: "% basefn)
                 # If no ID is passed, stop
                 if not ifdbID:
                     return
             else:
-                print "No IFID found for "+fn
+                print("No IFID found for "+fn)
                 return
 
         # Massage the directory to fit what IFDB needs
@@ -78,7 +78,7 @@ def submitID(fns, askForID = False):
         # (Man I wish we had access to str.format())
         urlToFetch = ifdbUrl % {'ifdbid' : ifdbID, 'path' : ifdbPath,
                                 'key': ifdbKey}
-        ifdbPage = urllib2.urlopen(urlToFetch)
+        ifdbPage = urllib.request.urlopen(urlToFetch)
         resultStr = ifdbPage.readline()
         ifdbPage.close()
         # The ifdb update page returns plain text from the following list:
@@ -87,11 +87,11 @@ def submitID(fns, askForID = False):
         #   Error: no link found to this pending URL
         #   Error: database update failed: <db error message>
         if resultStr == 'OK':
-            print "IFDB updated for %s (ID %s)\n" % (fn, ifdbID)
+            print("IFDB updated for %s (ID %s)\n" % (fn, ifdbID))
         elif resultStr.startswith('Error: '):
-            print "IFDB update for %s failed. %s" % (fn, resultStr)
+            print("IFDB update for %s failed. %s" % (fn, resultStr))
         else:
-            print "IFDB update for %s failed unexpectedly: %s" % (fn, resultStr)
+            print("IFDB update for %s failed unexpectedly: %s" % (fn, resultStr))
 
 
 if __name__ == "__main__":
