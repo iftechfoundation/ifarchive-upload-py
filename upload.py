@@ -11,6 +11,8 @@ errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
 takes care of this.
 """
 
+# Andrew Plotkin (18 Oct 2023):
+#   - Write to an SQL database as well as the ifids.db file.
 # Andrew Plotkin (6 Oct 2023):
 #   - Read a config file for configurable (and nonpublic) info.
 # Andrew Plotkin (30 Sep 2023):
