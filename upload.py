@@ -341,7 +341,7 @@ problem persists, please contact the archive maintainers.</p>""")
                     uploadtime,
                     hashval,
                     len(content),
-                    fn, ofn,
+                    fn+timestamp, ofn,
                     nameval, emailval,
                     remoteaddr, browser, 
                     rightsval, directoryval,
