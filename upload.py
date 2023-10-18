@@ -331,7 +331,7 @@ problem persists, please contact the archive maintainers.</p>""")
                         ids.close()
                         os.umask(oldmask)
                 except:
-                    logger.error('IFDB ID %s ERROR %s' % (ifdbID, traceback.format_exc))
+                    logger.error('IFDB ID %s ERROR %s' % (ifdbID, traceback.format_exc()))
 
             try:
                 db = sqlite3.connect(dbFile)
@@ -351,7 +351,7 @@ problem persists, please contact the archive maintainers.</p>""")
                 db.close()
                 del db
             except:
-                logger.error('SQL ERROR %s' % (traceback.format_exc,))
+                logger.error('SQL ERROR %s' % (traceback.format_exc(),))
             
 
             tsList.append(timestamp)
