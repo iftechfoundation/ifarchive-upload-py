@@ -337,7 +337,7 @@ problem persists, please contact the archive maintainers.</p>""")
                 db = sqlite3.connect(dbFile)
                 db.isolation_level = None   # autocommit
                 curs = db.cursor()
-                curs.execute('INSERT INTO uploads (uptime, md5, size, filename, origfilename, donorname, donoremail, donorip, donoruseragent, permission, suggestdir, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (
+                curs.execute('INSERT INTO uploads (uploadtime, md5, size, filename, origfilename, donorname, donoremail, donorip, donoruseragent, permission, suggestdir, ifdbid, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (
                     uploadtime,
                     hashval,
                     len(content),
@@ -347,6 +347,9 @@ problem persists, please contact the archive maintainers.</p>""")
                     rightsval, directoryval,
                     aboutval,
                 ))
+                del curs
+                db.close()
+                del db
             except:
                 logger.error('SQL ERROR %s' % (traceback.format_exc,))
             
