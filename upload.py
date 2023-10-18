@@ -69,6 +69,7 @@ import traceback
 import re
 import shelve
 import hashlib
+import sqlite3
 
 # First, some constants. Some of these are taken from a config file.
 
@@ -85,8 +86,11 @@ dirUpload = "/var/ifarchive/incoming"
 # Logs will be written here. The file must be chown www-data.
 logfile = "/var/ifarchive/logs/web-upload.log"
 
-# Database of IFDB IDs.
+# Database of IFDB IDs. (Deprecated but we still use it for now.)
 ifdbIdFile = config['DEFAULT']['IFDBIdMapFile']
+
+# SQL database for upload information.
+dbFile = config['DEFAULT']['DBFile']
 
 # Maximum size of upload directory (in bytes) before no more files
 # are accepted.
@@ -268,12 +272,14 @@ def form(data, posturl):
                 f = f + 1
                 continue
 
+            content = data[key].value   # bytes
+
             # Clean the filename. Strip off the dir part of the path, if
             # any (that's ofn); then clean out unsafe characters (that's fn).
             ofn = strip_dirs(fn)
             fn = clean_filename(fn)
 
-            # If the file already exists, add a timestamp to the new filename
+            # If the file already exists, add a timestamp to the new filename.
             if os.path.isfile(os.path.join(dirUpload, fn)):
                 timestamp = "."+str(time.time())
             else:
@@ -282,7 +288,7 @@ def form(data, posturl):
             # Try opening the file, exiting on error
             try:
                 o = open(os.path.join(dirUpload, fn)+timestamp, "wb")
-                o.write(data[key].value)
+                o.write(content)
                 o.close()
             except:
                 logger.error('ERROR %s' % traceback.format_exc())
@@ -311,7 +317,7 @@ problem persists, please contact the archive maintainers.</p>""")
                         oldmask = os.umask(0)
                         ids = shelve.open(ifdbIdFile, protocol=2)
                         # Get the md5 hash of the file data.
-                        hashval = hashlib.md5(data[key].value).hexdigest()
+                        hashval = hashlib.md5(content).hexdigest()
                         ids[hashval] = {"id": ifdbID, "time": time.time()}
                         ids.close()
                         os.umask(oldmask)
@@ -319,8 +325,8 @@ problem persists, please contact the archive maintainers.</p>""")
                     logger.error('IFDB ID %s ERROR %s' % (ifdbID, traceback.format_exc))
 
             tsList.append(timestamp)
-            kbList.append(len(data[key].value))
-            kbCount = kbCount + len(data[key].value)
+            kbList.append(len(content))
+            kbCount = kbCount + len(content)
             f = f + 1
         else:
             f = 0
