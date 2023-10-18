@@ -234,6 +234,13 @@ def form(data, posturl):
 
     # We have uploads!
 
+    nameval = data.getfirst('name', 'Anonymous')
+    emailval = data.getfirst('email', '???')
+    directoryval = data.getfirst('directory', None)
+    ifdbID = data.getfirst('ifdbid', None)
+
+    aboutval = data.getfirst('filedesc', None)
+
     tosval = data.getfirst('tos', None)
     if not tosval:
         msg = """You must agree to the Terms of Use in order to upload files to the Archive."""
@@ -273,6 +280,11 @@ def form(data, posturl):
                 continue
 
             content = data[key].value   # bytes
+            
+            # Get the md5 hash of the file data.
+            hashval = hashlib.md5(content).hexdigest()
+            
+            uploadtime = time.time()
 
             # Clean the filename. Strip off the dir part of the path, if
             # any (that's ofn); then clean out unsafe characters (that's fn).
@@ -281,7 +293,7 @@ def form(data, posturl):
 
             # If the file already exists, add a timestamp to the new filename.
             if os.path.isfile(os.path.join(dirUpload, fn)):
-                timestamp = "."+str(time.time())
+                timestamp = "."+str(uploadtime)
             else:
                 timestamp = ""
 
@@ -306,9 +318,8 @@ problem persists, please contact the archive maintainers.</p>""")
                 fnList.append('%s (originally %s)' % (fn, ofn))
 
             # If there's an IFDB ID, save it
-            if 'ifdbid' in data:
+            if ifdbID:
                 try:
-                    ifdbID = data['ifdbid'].value
                     # Make sure the ifdbID is alnum only
                     if re.search('\W', ifdbID):
                         logger.error("IFDB ID %s isn't alphanumeric" % ifdbID)
@@ -316,13 +327,29 @@ problem persists, please contact the archive maintainers.</p>""")
                         # We gotta play with the umask to open shelve
                         oldmask = os.umask(0)
                         ids = shelve.open(ifdbIdFile, protocol=2)
-                        # Get the md5 hash of the file data.
-                        hashval = hashlib.md5(content).hexdigest()
-                        ids[hashval] = {"id": ifdbID, "time": time.time()}
+                        ids[hashval] = {"id": ifdbID, "time": uploadtime}
                         ids.close()
                         os.umask(oldmask)
                 except:
                     logger.error('IFDB ID %s ERROR %s' % (ifdbID, traceback.format_exc))
+
+            try:
+                db = sqlite3.connect(dbFile)
+                db.isolation_level = None   # autocommit
+                curs = db.cursor()
+                curs.execute('INSERT INTO uploads (uptime, md5, size, filename, origfilename, donorname, donoremail, donorip, donoruseragent, permission, suggestdir, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (
+                    uploadtime,
+                    hashval,
+                    len(content),
+                    fn, ofn,
+                    nameval, emailval,
+                    browser, remoteaddr,
+                    rightsval, directoryval,
+                    aboutval,
+                ))
+            except:
+                logger.error('SQL ERROR %s' % (traceback.format_exc,))
+            
 
             tsList.append(timestamp)
             kbList.append(len(content))
@@ -351,21 +378,15 @@ problem persists, please contact the archive maintainers.</p>""")
         msg.append("  * %s (%.2f kb)\n" % (fnList[x]+tsList[x],kbList[x] / 1024.0))
         fnamesForMailing.append(fnList[x]+tsList[x])
 
-    nameval = data.getfirst('name')
-    if not nameval:
-        nameval = 'Anonymous'
-    emailval = data.getfirst('email')
-    if not emailval:
-        emailval = '?@???'
     msg.append("\nUploaded by %s <%s>\n\n" % (nameval, emailval,))
     
-    if "filedesc" in data:
-        msg.append(fix_line_endings(data["filedesc"].value) + "\n")
-    if "directory" in data:
-        msg.append("Suggested directory: if-archive/%s\n" % (data["directory"].value,))
+    if aboutval:
+        msg.append(fix_line_endings(aboutval) + "\n")
+    if directoryval:
+        msg.append("Suggested directory: if-archive/%s\n" % (directoryval,))
     msg.append("Permission from: %s\n" % (rightsval,))
-    if "ifdbid" in data:
-        msg.append("IFDB ID: %s\n" % (data["ifdbid"].value,))
+    if ifdbID:
+        msg.append("IFDB ID: %s\n" % (ifdbID,))
         # Try writing the IFDB ID to a text file
     msg.append('\n\n')
     
