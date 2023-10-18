@@ -343,7 +343,7 @@ problem persists, please contact the archive maintainers.</p>""")
                     len(content),
                     fn, ofn,
                     nameval, emailval,
-                    browser, remoteaddr,
+                    remoteaddr, browser, 
                     rightsval, directoryval,
                     ifdbID,
                     aboutval,
