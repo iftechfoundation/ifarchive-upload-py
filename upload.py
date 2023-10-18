@@ -345,6 +345,7 @@ problem persists, please contact the archive maintainers.</p>""")
                     nameval, emailval,
                     browser, remoteaddr,
                     rightsval, directoryval,
+                    ifdbID,
                     aboutval,
                 ))
                 del curs
