@@ -236,20 +236,25 @@ def form(data, posturl):
 
     # We have uploads!
 
-    nameval = data.getfirst('name', 'Anonymous')
-    emailval = data.getfirst('email', '???')
-    directoryval = data.getfirst('directory', None)
-    ifdbID = data.getfirst('ifdbid', None)
+    nameval = data.getfirst('name')
+    if not nameval:
+        nameval = 'Anonymous'
+    emailval = data.getfirst('email')
+    if not emailval:
+        emailval = '???'
+    
+    directoryval = data.getfirst('directory')
+    ifdbID = data.getfirst('ifdbid')
 
-    aboutval = data.getfirst('filedesc', None)
+    aboutval = data.getfirst('filedesc')
 
-    tosval = data.getfirst('tos', None)
+    tosval = data.getfirst('tos')
     if not tosval:
         msg = """You must agree to the Terms of Use in order to upload files to the Archive."""
         errpage('<p>'+msg+'</p>')
         return
 
-    rightsval = data.getfirst('rights', None)
+    rightsval = data.getfirst('rights')
     if not rightsval:
         msg = """Please select whichever of the "Right to use" options applies to your upload."""
         errpage('<p>'+msg+'</p>')
