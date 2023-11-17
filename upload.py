@@ -11,6 +11,8 @@ errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
 takes care of this.
 """
 
+# Andrew Plotkin (17 Nov 2023):
+#   - Loosen the definition of safe filename characters.
 # Andrew Plotkin (18 Oct 2023):
 #   - Write to an SQL database as well as the ifids.db file.
 # Andrew Plotkin (6 Oct 2023):
@@ -166,9 +168,11 @@ def strip_dirs(fn):
 
 def clean_filename(fn):
     """Clean a filename from the HTML form. We replace characters considered
-    unsafe with underscores. Safe is alphanumerics plus [+-=_. ].
+    unsafe with underscores. Unsafe is control characters (0-31, 127-159);
+    anything above 255; and slashes and backslashes.
     """
-    fn = re.sub('[^a-zA-Z0-9 +=_.-]+', lambda ch:'_', fn)
+    pat = re.compile('[^ -.0-\\[\\]-~\xA0-\xFF]+')
+    fn = pat.sub('_', fn)
     return fn
 
 def mailme(msg="", name="", nemail="", mailsubj="Upload Report"):
