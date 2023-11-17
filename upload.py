@@ -168,10 +168,10 @@ def strip_dirs(fn):
 
 def clean_filename(fn):
     """Clean a filename from the HTML form. We replace characters considered
-    unsafe with underscores. Unsafe is control characters (0-31, 127-159);
-    anything above 255; and slashes and backslashes.
+    unsafe with underscores. Unsafe is control characters (0-31, 127-159),
+    plus slashes and backslashes.
     """
-    pat = re.compile('[^ -.0-\\[\\]-~\xA0-\xFF]+')
+    pat = re.compile('[\x00-\x1F\x7F-\x9F/\\\\]+')
     fn = pat.sub('_', fn)
     return fn
 
