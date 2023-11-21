@@ -302,6 +302,14 @@ def form(data, posturl):
             ofn = strip_dirs(fn)
             fn = clean_filename(fn)
 
+            # For some reason, double quotes are encoded as %22, even though
+            # nothing else gets percent-encoded like that.
+            # We fix this, even though it means that a *literal* "%22" will
+            # get munged.
+            # (I suspect the real fix is to switch this script from
+            # CGI to WSGI.)
+            fn = fn.replace('%22', '"')
+
             # If the file already exists, add a timestamp to the new filename.
             if os.path.isfile(os.path.join(dirUpload, fn)):
                 timestamp = "."+str(uploadtime)
