@@ -44,7 +44,7 @@ If you have any problems, please contact us: <code><a href="mailto:submit@ifarch
 <form action="{posturl}" method="POST" enctype="multipart/form-data">
 <table class="FormTable" border="0" cellspacing="5">
   <tr><td>File:</td><td>&nbsp;</td>
-    <td><input type="file" name="file.1" size="40" maxlength="100"></td></tr>
+    <td><input class="FormUploadWidget" type="file" name="file.1" size="40" maxlength="100"></td></tr>
   <tr><td>Your name:</td><td>&nbsp;</td>
     <td><input class="FormField" type="text" name="name" size="40" maxlength="50"></td></tr>
   <tr><td>Your email address:</td><td>&nbsp;</td>
@@ -64,7 +64,10 @@ If you have any problems, please contact us: <code><a href="mailto:submit@ifarch
         <label for="b_tos">I agree to the <a href="../misc/license.html">Terms of Use</a>.</label></td></tr>
 </table>
 
-<p><input name="submit" {button}></p>
+<p class="SubmitPara">
+<input class="FormButton" name="submit" {button}>
+</p>
+
 </form>
 
 </div>
