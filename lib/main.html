@@ -42,15 +42,15 @@ If you have any problems, please contact us: <code><a href="mailto:submit@ifarch
 </p>
 
 <form action="{posturl}" method="POST" enctype="multipart/form-data">
-<table border="0" cellspacing="5">
+<table class="FormTable" border="0" cellspacing="5">
   <tr><td>File:</td><td>&nbsp;</td>
     <td><input type="file" name="file.1" size="40" maxlength="100"></td></tr>
   <tr><td>Your name:</td><td>&nbsp;</td>
-    <td><input type="text" name="name" size="40" maxlength="50"></td></tr>
+    <td><input class="FormField" type="text" name="name" size="40" maxlength="50"></td></tr>
   <tr><td>Your email address:</td><td>&nbsp;</td>
-    <td><input type="text" name="email" size="40" maxlength="50"></td></tr>
+    <td><input class="FormField" type="text" name="email" size="40" maxlength="50"></td></tr>
   <tr><td>About this file<br>(including version, license, etc.):</td><td>&nbsp;</td>
-    <td><textarea name="filedesc" rows="6" cols="40"></textarea></td></tr>
+    <td><textarea class="FormField" name="filedesc" rows="6" cols="40"></textarea></td></tr>
   <tr><td>Right to use:</td><td>&nbsp;</td>
     <td><input id="b_rights_author" type="radio" name="rights" value="author">
         <label for="b_rights_author">I am the author of this file and I give permission for the IF Archive to host and distribute it.</label></td></tr>
@@ -58,7 +58,7 @@ If you have any problems, please contact us: <code><a href="mailto:submit@ifarch
     <td><input id="b_rights_tried" type="radio" name="rights" value="tried">
         <label for="b_rights_tried">I am not the author, but to the best of my knowledge the author is okay with this.</label></td></tr>
   <tr><td>Suggested directory:</td><td>if&#x2011;archive/</td>
-    <td><input type="text" name="directory" size="40" maxlength="100"></td></tr>
+    <td><input class="FormField" type="text" name="directory" size="40" maxlength="100"></td></tr>
   <tr><td>Agreement:</td><td>&nbsp;</td>
     <td><input id="b_tos" type="checkbox" name="tos">
         <label for="b_tos">I agree to the <a href="../misc/license.html">Terms of Use</a>.</label></td></tr>
