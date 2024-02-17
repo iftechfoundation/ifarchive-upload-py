@@ -412,6 +412,9 @@ problem persists, please contact the archive maintainers.</p>""")
         msg.append("IFDB ID: %s\n" % (ifdbID,))
         # Try writing the IFDB ID to a text file
     msg.append('\n\n')
+
+    msg.append('https://upload.ifarchive.org/admin/incoming')
+    msg.append('\n\n')
     
     msg = ''.join(msg)
     fnamesForMailing = ' '.join(fnamesForMailing)
