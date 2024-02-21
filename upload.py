@@ -245,6 +245,7 @@ def form(data, posturl):
     
     directoryval = data.getfirst('directory')
     ifdbID = data.getfirst('ifdbid')
+    tuid = data.getfirst('tuid')
 
     aboutval = data.getfirst('filedesc')
 
@@ -332,10 +333,13 @@ problem persists, please contact the archive maintainers.</p>""")
                 logger.info('UPLOAD %s ORIGINAL NAME %s (%s)' % (fn+timestamp, ofn, remoteaddr))
                 fnList.append('%s (originally %s)' % (fn, ofn))
 
+            # Make sure the ifdbID and tuid are alnum only
             if ifdbID:
-                # Make sure the ifdbID is alnum only
                 if re.search('\W', ifdbID):
                     logger.error("IFDB ID %s isn't alphanumeric" % ifdbID)
+            if tuid:
+                if re.search('\W', tuid):
+                    logger.error("TUID %s isn't alphanumeric" % tuid)
 
             try:
                 db = sqlite3.connect(dbFile)
