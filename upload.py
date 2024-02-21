@@ -71,7 +71,6 @@ import logging
 import time
 import traceback
 import re
-import shelve
 import hashlib
 import sqlite3
 
@@ -89,9 +88,6 @@ dirUpload = "/var/ifarchive/incoming"
 
 # Logs will be written here. The file must be chown www-data.
 logfile = "/var/ifarchive/logs/web-upload.log"
-
-# Database of IFDB IDs. (Deprecated but we still use it for now.)
-ifdbIdFile = config['DEFAULT']['IFDBIdMapFile']
 
 # SQL database for upload information.
 dbFile = config['DEFAULT']['DBFile']
@@ -336,21 +332,10 @@ problem persists, please contact the archive maintainers.</p>""")
                 logger.info('UPLOAD %s ORIGINAL NAME %s (%s)' % (fn+timestamp, ofn, remoteaddr))
                 fnList.append('%s (originally %s)' % (fn, ofn))
 
-            # If there's an IFDB ID, save it
             if ifdbID:
-                try:
-                    # Make sure the ifdbID is alnum only
-                    if re.search('\W', ifdbID):
-                        logger.error("IFDB ID %s isn't alphanumeric" % ifdbID)
-                    else:
-                        # We gotta play with the umask to open shelve
-                        oldmask = os.umask(0)
-                        ids = shelve.open(ifdbIdFile, protocol=2)
-                        ids[hashval] = {"id": ifdbID, "time": uploadtime}
-                        ids.close()
-                        os.umask(oldmask)
-                except:
-                    logger.error('IFDB ID %s ERROR %s' % (ifdbID, traceback.format_exc()))
+                # Make sure the ifdbID is alnum only
+                if re.search('\W', ifdbID):
+                    logger.error("IFDB ID %s isn't alphanumeric" % ifdbID)
 
             try:
                 db = sqlite3.connect(dbFile)
