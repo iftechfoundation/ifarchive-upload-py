@@ -345,7 +345,7 @@ problem persists, please contact the archive maintainers.</p>""")
                 db = sqlite3.connect(dbFile)
                 db.isolation_level = None   # autocommit
                 curs = db.cursor()
-                curs.execute('INSERT INTO uploads (uploadtime, md5, size, filename, origfilename, donorname, donoremail, donorip, donoruseragent, permission, suggestdir, ifdbid, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (
+                curs.execute('INSERT INTO uploads (uploadtime, md5, size, filename, origfilename, donorname, donoremail, donorip, donoruseragent, permission, suggestdir, ifdbid, tuid, about) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (
                     uploadtime,
                     hashval,
                     len(content),
@@ -353,7 +353,7 @@ problem persists, please contact the archive maintainers.</p>""")
                     nameval, emailval,
                     remoteaddr, browser, 
                     rightsval, directoryval,
-                    ifdbID,
+                    ifdbID, tuid,
                     aboutval,
                 ))
                 del curs
@@ -399,7 +399,8 @@ problem persists, please contact the archive maintainers.</p>""")
     msg.append("Permission from: %s\n" % (rightsval,))
     if ifdbID:
         msg.append("IFDB ID: %s\n" % (ifdbID,))
-        # Try writing the IFDB ID to a text file
+    if tuid:
+        msg.append("TUID: %s\n" % (tuid,))
     msg.append('\n\n')
 
     msg.append('https://upload.ifarchive.org/admin/incoming')
