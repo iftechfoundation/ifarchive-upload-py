@@ -89,6 +89,9 @@ dirUpload = "/var/ifarchive/incoming"
 # Logs will be written here. The file must be chown www-data.
 logfile = "/var/ifarchive/logs/web-upload.log"
 
+# Links to the main site use this domain.
+archivedomain = config['DEFAULT'].get('ArchiveDomain', '')
+
 # SQL database for upload information.
 dbFile = config['DEFAULT']['DBFile']
 
