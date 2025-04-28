@@ -11,6 +11,10 @@ errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
 takes care of this.
 """
 
+# Andrew Plotkin (28 Apr 2025):
+#   - Minor template fixes to support testframe.
+# Andrew Plotkin (20 Feb 2024):
+#   - Drop code that wrote to the ifids.db file.
 # Andrew Plotkin (17 Nov 2023):
 #   - Loosen the definition of safe filename characters.
 # Andrew Plotkin (18 Oct 2023):
