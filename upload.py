@@ -100,8 +100,8 @@ maxdirsize = config['DEFAULT'].getint('MaxIncomingDirSize')
 # running the form.
 totaldirsize = None
 
-# Where to email upload reports.
-email = "webuploader@ifarchive.org"
+# Where to email upload reports. (If None, don't.)
+email = config['Upload'].get('ReportEmail', None)
 
 # Mail-sending tool.
 sendmail = "/usr/sbin/sendmail"
@@ -112,8 +112,8 @@ def write_template(filename, map):
     """Read a template file from the lib directory, perform the
     substitutions in the map file, and print the result.
 
-    This is a very simple substitution engine. I know, we have a much
-    nicer one in ifmap.py, but this is a CGI script and I want to keep
+    This is a very simple substitution engine. Most of the Archive
+    systems use Jinja, but this is a CGI script and I want to keep
     it simple.
     """
     text = get_template(filename)
