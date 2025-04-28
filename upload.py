@@ -133,6 +133,8 @@ def get_template(filename):
     fl = open(os.path.join(dirLibFiles, filename), encoding='utf-8')
     text = fl.read()
     fl.close()
+    # HACK: This would make more sense in Jinja.
+    text = text.replace('{homedomain}', archivedomain)
     return text
     
 def plural(s,num):
