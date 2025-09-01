@@ -275,11 +275,11 @@ def form(data, posturl):
         msg = """There are already too many files in the upload area, preventing your files from being uploaded. We apologize for the inconvenience."""
         errpage('<p>'+msg+'</p>')
         msg += ("\nUploaded by %s <%s>\n\n" % (nameval, emailval,))
-        fnamesForMailing = []
-        for x in range(0, len(fnList)):
-            fnamesForMailing.append(fnList[x]+tsList[x])
-        fnamesForMailing = ' '.join(fnamesForMailing)
-        mailme(msg, nameval, emailval, "IFArchive incoming full: "+fnamesForMailing)
+        fn = "???"
+        key = "file.%s" % (1,)
+        if key in data:
+            fn = data[key].filename
+        mailme(msg, nameval, emailval, "IFArchive incoming full: "+fn)
         return
 
     if not os.path.exists(dirUpload):
