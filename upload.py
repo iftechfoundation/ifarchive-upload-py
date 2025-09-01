@@ -11,6 +11,8 @@ errors. The Apache config contains the line "SetEnv LANG en_US.UTF-8", which
 takes care of this.
 """
 
+# Andrew Plotkin (1 Sep 2025):
+#   - Include uploader name/email and filename with "incoming full" error.
 # Andrew Plotkin (28 Apr 2025):
 #   - Minor template fixes to support testframe.
 # Andrew Plotkin (20 Feb 2024):
