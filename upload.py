@@ -274,7 +274,12 @@ def form(data, posturl):
         # We don't publicize the maximum size.
         msg = """There are already too many files in the upload area, preventing your files from being uploaded. We apologize for the inconvenience."""
         errpage('<p>'+msg+'</p>')
-        mailme(msg)
+        msg += ("\nUploaded by %s <%s>\n\n" % (nameval, emailval,))
+        fnamesForMailing = []
+        for x in range(0, len(fnList)):
+            fnamesForMailing.append(fnList[x]+tsList[x])
+        fnamesForMailing = ' '.join(fnamesForMailing)
+        mailme(msg, nameval, emailval, "IFArchive incoming full: "+fnamesForMailing)
         return
 
     if not os.path.exists(dirUpload):
