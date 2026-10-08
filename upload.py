@@ -266,6 +266,12 @@ def form(data, posturl):
         errpage('<p>'+msg+'</p>')
         return
 
+    humanval = data.getfirst('human')
+    if not humanval:
+        msg = """Only human beings may upload files to the Archive."""
+        errpage('<p>'+msg+'</p>')
+        return
+
     rightsval = data.getfirst('rights')
     if not rightsval:
         msg = """Please select whichever of the "Right to use" options applies to your upload."""
